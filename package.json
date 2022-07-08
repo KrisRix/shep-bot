@@ -4,7 +4,8 @@
   "description": "A custom bot for the Carry On discord server",
   "main": "index.js",
   "scripts": {
-    "test": "node index.js"
+    "test": "echo \"Error: no test specifed\" && exit 1",
+    "dev": "nodemon index.js"
   },
   "author": "KrisRix",
   "license": "ISC",

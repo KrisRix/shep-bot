@@ -1,21 +1,30 @@
 module.exports = {
 	name: 'interactionCreate',
 	async execute(interaction, client) {
-		if (!interaction.isCommand()) return;
+		if (interaction.isCommand()) {
+			const command = client.commands.get(interaction.commandName);
 
-		const command = client.commands.get(interaction.commandName);
+			if (!command) return;
 
-		if (!command) return;
-
-		try {
-			await command.execute(interaction);
+			try {
+				await command.execute(interaction, client);
+			}
+			catch (error) {
+				console.error(error);
+				await interaction.reply({
+					content: 'Ope! There was an error while executing this command!',
+					ephemeral: true,
+				});
+			}
 		}
-		catch (error) {
-			console.error(error);
-			await interaction.reply({
-				content: 'Ope! There was an error while executing this command!',
-				ephemeral: true,
-			});
+		else if (interaction.isSelectMenu()) {
+			if (interaction.customId == 'colour-select') {
+				let colors = '';
+				await interaction.values.forEach(async value => {
+					colors += `${value}, `;
+				});
+				await interaction.reply({ content: `Whoa, your fav color is ${colors}? Nice!` });
+			}
 		}
 	},
 };
