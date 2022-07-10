@@ -15,7 +15,7 @@ module.exports = (client) => {
 				const commandPath = path.join(commandFolder, file);
 				const command = require(commandPath);
 				// set a new item in the Collection
-				// with the key as the command name and hte value as the exported module
+				// with the key as the command name and the value as the exported module
 				client.commands.set(command.data.name, command);
 				client.commandArray.push(command.data.toJSON());
 			}

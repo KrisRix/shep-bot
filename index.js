@@ -5,7 +5,7 @@ const { Client, Collection, Intents } = require('discord.js');
 require('dotenv').config();
 
 // Create a new client instance
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS] });
 
 // Function handling
 const functionsPath = path.join(__dirname, 'functions');
@@ -19,12 +19,18 @@ const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'
 const commandsPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(commandsPath);
 
+// Button handling
+const buttonsPath = path.join(__dirname, 'buttons');
+const buttonsFolder = fs.readdirSync(buttonsPath);
+
 // Database handling
 const mongoEventsPath = path.join(__dirname, 'mongoEvents');
 const mongoEventFiles = fs.readdirSync(mongoEventsPath).filter(file => file.endsWith('.js'));
 
 // All commands
 client.commands = new Collection();
+// All buttons
+client.buttons = new Collection();
 
 (async () => {
 	// Read handlers
@@ -35,6 +41,7 @@ client.commands = new Collection();
 	// Initiate handlers
 	client.handleEvents(eventFiles, eventsPath);
 	client.handleCommands(commandFolders, commandsPath);
+	client.handleButtons(buttonsFolder, buttonsPath);
 	// Login to Discord with client's token
 	client.login(process.env.token);
 	// Connect to database

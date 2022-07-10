@@ -12,7 +12,7 @@ module.exports = {
 					.setCustomId('color-select')
 					.setPlaceholder('Nothing is selected yet.')
 					.setMinValues(1)
-					.setMaxValues(2)
+					.setMaxValues(1)
 					.addOptions([
 						{
 							label: 'Red',
