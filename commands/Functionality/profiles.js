@@ -27,10 +27,13 @@ module.exports = {
 		const tumblr = interaction.options.getString('tumblr') ? interaction.options.getString('tumblr') : 'N/A';
 		const twitter = interaction.options.getString('twitter') ? interaction.options.getString('twitter') : 'N/A';
 		// Find pronouns role
-		let memberPronouns = 'not assigned';
+		let memberPronouns;
 		for (const pronoun in pronounsList) {
-			if (interaction.member.roles.cache.has(pronoun.id)) {
+			if (interaction.member.roles.cache.has(pronoun)) {
 				memberPronouns = pronoun;
+			}
+			else {
+				memberPronouns = 'Not assigned';
 			}
 		}
 		// Message to confirm input
