@@ -11,9 +11,9 @@ const profileSchema = new Schema({
 	memberId: reqString,
 	pronouns: reqString,
 	age: Boolean,
-	ao3: String,
-	tumblr: String,
-	twitter: String,
+	ao3: reqString,
+	tumblr: reqString,
+	twitter: reqString,
 });
 
 const name = 'member-profiles';

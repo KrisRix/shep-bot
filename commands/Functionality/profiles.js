@@ -31,7 +31,7 @@ module.exports = {
 		// Update database
 		await profileSchema.findOneAndUpdate({
 			_id: interaction.guild.id,
-			memberId: interaction.guild.member.id,
+			memberId: interaction.member.id,
 		},
 		{
 			_id: interaction.guild.id,
