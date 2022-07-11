@@ -29,7 +29,7 @@ module.exports = {
 		// Find pronouns role
 		let memberPronouns = 'not assigned';
 		for (const pronoun in pronounsList) {
-			if (interaction.member.roles.cache.has(pronoun)) {
+			if (interaction.member.roles.cache.has([pronoun])) {
 				memberPronouns = pronoun;
 			}
 		}
