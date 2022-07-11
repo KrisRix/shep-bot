@@ -1,6 +1,8 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const profileSchema = require('../../schemas/profile-schema');
 
+const pronounsList = ['941035999339872337'];
+
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('profile')
@@ -24,10 +26,15 @@ module.exports = {
 		const ao3 = interaction.options.getString('ao3') ? interaction.options.getString('ao3') : 'N/A';
 		const tumblr = interaction.options.getString('tumblr') ? interaction.options.getString('tumblr') : 'N/A';
 		const twitter = interaction.options.getString('twitter') ? interaction.options.getString('twitter') : 'N/A';
-		// Combine all socials
-		const socialMedia = [ao3, tumblr, twitter];
+		// Find pronouns role
+		let memberPronouns = 'not assigned';
+		for (const pronoun in pronounsList) {
+			if (interaction.member.roles.has(pronoun)) {
+				memberPronouns = pronoun;
+			}
+		}
 		// Message to confirm input
-		await interaction.reply(`Your profile info is: ${age}, ${socialMedia}`);
+		await interaction.reply(`Your profile info is: ${memberPronouns}`);
 		// Update database
 		await profileSchema.findOneAndUpdate({
 			_id: interaction.guild.id,
@@ -36,7 +43,7 @@ module.exports = {
 		{
 			_id: interaction.guild.id,
 			memberId: interaction.member.id,
-			pronouns: 'placeholder',
+			pronouns: memberPronouns,
 			age,
 			ao3,
 			tumblr,
