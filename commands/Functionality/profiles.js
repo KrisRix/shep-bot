@@ -35,7 +35,7 @@ module.exports = {
 		},
 		{
 			_id: interaction.guild.id,
-			memberId: interaction.guild.member.id,
+			memberId: interaction.member.id,
 			pronouns: 'placeholder',
 			age,
 			ao3,
