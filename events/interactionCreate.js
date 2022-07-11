@@ -8,12 +8,7 @@ module.exports = {
 
 			try {
 				if (command.permissions && command.permissions.length > 0) {
-					if (!interaction.member.permissions.has(command.permissions)) {
-						await interaction.reply({
-							content: 'Sorry, bud, you don\'t have permission to use this command.',
-							ephemeral: true });
-						return;
-					}
+					if (!interaction.member.permissions.has(command.permissions)) return await interaction.reply({ content: 'Sorry, bud, you don\'t have permission to use this command.', ephemeral: true });
 				}
 				await command.execute(interaction, client);
 			}

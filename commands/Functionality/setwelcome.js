@@ -38,7 +38,5 @@ module.exports = {
 		}, {
 			upsert: true,
 		});
-		// Confirmation message
-		await interaction.reply('Welcome channel set!');
 	},
 };
