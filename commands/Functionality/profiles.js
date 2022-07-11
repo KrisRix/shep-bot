@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const profileSchema = require('../../schemas/profile-schema');
 
-const pronounsList = ['941035999339872337'];
+const pronounsList = ['941035999339872337', 'humans'];
 
 module.exports = {
 	data: new SlashCommandBuilder()
