@@ -28,7 +28,7 @@ module.exports = {
 		const twitter = interaction.options.getString('twitter') ? interaction.options.getString('twitter') : 'N/A';
 		// Find pronouns role
 		let memberPronouns;
-		for (const pronoun in pronounsList) {
+		for (const pronoun of pronounsList) {
 			if (interaction.member.roles.cache.has(pronoun.id)) {
 				memberPronouns = pronoun;
 			}
