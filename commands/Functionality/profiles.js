@@ -27,7 +27,7 @@ module.exports = {
 		const tumblr = interaction.options.getString('tumblr') ? interaction.options.getString('tumblr') : 'N/A';
 		const twitter = interaction.options.getString('twitter') ? interaction.options.getString('twitter') : 'N/A';
 		// Find pronouns role
-		let memberPronouns = interaction.member.roles.cache.find(role => pronounsList.includes(role.name));
+		let memberPronouns = interaction.member.roles.cache.find(role => pronounsList.includes(role.id));
 		if (!memberPronouns) {
 			memberPronouns = 'Not assigned';
 		}
