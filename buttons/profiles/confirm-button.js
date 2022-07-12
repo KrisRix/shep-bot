@@ -1,10 +1,11 @@
 const profileSchema = require('../../schemas/profile-schema');
+const { memberPronouns, age, ao3, tumblr, twitter, instagram, goodreads } = require('../../commands/Functionality/profiles');
 
 module.exports = {
 	data: {
 		name: 'confirm-button',
 	},
-	async execute(interaction, memberPronouns, age, ao3, tumblr, twitter, instagram, goodreads) {
+	async execute(interaction) {
 		await interaction.reply('Your profile is set!');
 
 		// Update database
