@@ -1,5 +1,5 @@
 const profileSchema = require('../../schemas/profile-schema');
-const { memberPronouns, age, ao3, twitter, instagram, goodreads } = require('../../commands/Functionality/profiles');
+const [ memberPronouns, age, ao3, twitter, instagram, goodreads ] = require('../../commands/Functionality/profiles');
 const tumblr = 'TEST?';
 
 module.exports = {
