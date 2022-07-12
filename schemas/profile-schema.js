@@ -11,10 +11,10 @@ const profileSchema = new Schema({
 	memberId: reqString,
 	pronouns: reqString,
 	age: Boolean,
-	ao3: reqString,
-	tumblr: reqString,
-	twitter: reqString,
-	instagram: reqString,
+	ao3: String,
+	tumblr: String,
+	twitter: String,
+	instagram: String,
 	goodreads: String,
 });
 

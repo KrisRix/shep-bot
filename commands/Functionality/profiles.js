@@ -26,14 +26,13 @@ module.exports = {
 		.addStringOption(option => option
 			.setName('goodreads')
 			.setDescription('Your Goodreads username')),
-
 	async execute(interaction) {
 		const age = interaction.options.getBoolean('age');
 		const ao3 = interaction.options.getString('ao3') ? interaction.options.getString('ao3') : 'N/A';
 		const tumblr = interaction.options.getString('tumblr') ? interaction.options.getString('tumblr') : 'N/A';
 		const twitter = interaction.options.getString('twitter') ? interaction.options.getString('twitter') : 'N/A';
 		const instagram = interaction.options.getString('instagram') ? interaction.options.getString('instagram') : 'N/A';
-		const goodreads = interaction.options.getString('goodreads');
+		const goodreads = interaction.options.getString('goodreads') ? interaction.options.getString('goodreads') : 'N/A';
 
 		// Find pronouns role
 		let memberPronouns = interaction.member.roles.cache.find(role => pronounsList.includes(role.id));
@@ -41,7 +40,18 @@ module.exports = {
 			memberPronouns = 'Not assigned';
 		}
 		// Message to confirm input
-		await interaction.reply(`Your profile info is: ${memberPronouns}`);
+		await interaction.reply({
+			content: `_*Here's the info I've got about you:*_
+			\n**Name:** ${interaction.member}
+			\n**Pronouns:** ${memberPronouns}
+			\n**Age:** ${age}
+			\n**AO3:** ${ao3}
+			\n**Tumblr:** ${tumblr}
+			\n**Twitter:** ${twitter}
+			\n**Instagram:** ${instagram}
+			\n**Goodreads:** ${goodreads}`,
+			ephemeral: false,
+		});
 
 		// Update database
 		await profileSchema.findOneAndUpdate({
