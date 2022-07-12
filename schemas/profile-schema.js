@@ -14,6 +14,8 @@ const profileSchema = new Schema({
 	ao3: reqString,
 	tumblr: reqString,
 	twitter: reqString,
+	instagram: reqString,
+	goodreads: String,
 });
 
 const name = 'member-profiles';

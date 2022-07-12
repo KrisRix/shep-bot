@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const profileSchema = require('../../schemas/profile-schema');
 
-const pronounsList = ['941035999339872337', 'humans'];
+const pronounsList = ['941035999339872337'];
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -13,19 +13,28 @@ module.exports = {
 			.setRequired(true))
 		.addStringOption(option => option
 			.setName('ao3')
-			.setDescription('Your AO3 username')
-			.setRequired(true))
+			.setDescription('Your AO3 username'))
 		.addStringOption(option => option
 			.setName('tumblr')
 			.setDescription('Your tumblr username'))
 		.addStringOption(option => option
 			.setName('twitter')
-			.setDescription('Your twitter username')),
+			.setDescription('Your twitter username'))
+		.addStringOption(option => option
+			.setName('instagram')
+			.setDescription('Your instagram username'))
+		.addStringOption(option => option
+			.setName('goodreads')
+			.setDescription('Your Goodreads username')),
+
 	async execute(interaction) {
 		const age = interaction.options.getBoolean('age');
 		const ao3 = interaction.options.getString('ao3') ? interaction.options.getString('ao3') : 'N/A';
 		const tumblr = interaction.options.getString('tumblr') ? interaction.options.getString('tumblr') : 'N/A';
 		const twitter = interaction.options.getString('twitter') ? interaction.options.getString('twitter') : 'N/A';
+		const instagram = interaction.options.getString('instagram') ? interaction.options.getString('instagram') : 'N/A';
+		const goodreads = interaction.options.getString('goodreads');
+
 		// Find pronouns role
 		let memberPronouns = interaction.member.roles.cache.find(role => pronounsList.includes(role.id));
 		if (!memberPronouns) {
@@ -33,6 +42,7 @@ module.exports = {
 		}
 		// Message to confirm input
 		await interaction.reply(`Your profile info is: ${memberPronouns}`);
+
 		// Update database
 		await profileSchema.findOneAndUpdate({
 			_id: interaction.guild.id,
@@ -46,6 +56,8 @@ module.exports = {
 			ao3,
 			tumblr,
 			twitter,
+			instagram,
+			goodreads,
 		}, {
 			upsert: true,
 		});
