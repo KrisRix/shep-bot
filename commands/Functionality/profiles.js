@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const profileSchema = require('../../schemas/profile-schema');
+const { MessageActionRow, MessageButton } = require('discord.js');
 
 const pronounsList = ['941035999339872337'];
 
@@ -26,8 +26,9 @@ module.exports = {
 		.addStringOption(option => option
 			.setName('goodreads')
 			.setDescription('Your Goodreads username')),
+
 	async execute(interaction) {
-		const age = interaction.options.getBoolean('age');
+		const age = interaction.options.getBoolean('age') ? 'adult' : 'minor';
 		const ao3 = interaction.options.getString('ao3') ? interaction.options.getString('ao3') : 'N/A';
 		const tumblr = interaction.options.getString('tumblr') ? interaction.options.getString('tumblr') : 'N/A';
 		const twitter = interaction.options.getString('twitter') ? interaction.options.getString('twitter') : 'N/A';
@@ -40,6 +41,17 @@ module.exports = {
 			memberPronouns = 'Not assigned';
 		}
 		// Message to confirm input
+		const row = new MessageActionRow()
+			.addComponents(
+				new MessageButton()
+					.setCustomId('confirm-button')
+					.setLabel('Confirm')
+					.setStyle('SUCCESS'),
+				new MessageButton()
+					.setCustomId('cancel-button')
+					.setLabel('Cancel')
+					.setStyle('DANGER'),
+			);
 		await interaction.reply({
 			content: `_*Here's the info I've got about you:*_
 			\n**Name:** ${interaction.member}
@@ -51,25 +63,6 @@ module.exports = {
 			\n**Instagram:** ${instagram}
 			\n**Goodreads:** ${goodreads}`,
 			ephemeral: false,
-		});
-
-		// Update database
-		await profileSchema.findOneAndUpdate({
-			_id: interaction.guild.id,
-			memberId: interaction.member.id,
-		},
-		{
-			_id: interaction.guild.id,
-			memberId: interaction.member.id,
-			pronouns: memberPronouns,
-			age,
-			ao3,
-			tumblr,
-			twitter,
-			instagram,
-			goodreads,
-		}, {
-			upsert: true,
-		});
+			components: [row] });
 	},
 };
