@@ -10,10 +10,12 @@ const profileSchema = new Schema({
 	_id: reqString,
 	memberId: reqString,
 	pronouns: reqString,
-	age: Boolean,
-	ao3: reqString,
-	tumblr: reqString,
-	twitter: reqString,
+	age: String,
+	ao3: String,
+	tumblr: String,
+	twitter: String,
+	instagram: String,
+	goodreads: String,
 });
 
 const name = 'member-profiles';
