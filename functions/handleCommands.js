@@ -1,5 +1,5 @@
-const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v9');
+const { REST } = require('undici');
+const { Routes } = require('discord-api-types/v10');
 const path = require('node:path');
 const fs = require('node:fs');
 const clientId = process.env.clientId;
@@ -21,7 +21,7 @@ module.exports = (client) => {
 			}
 		}
 		const rest = new REST({
-			version: '9',
+			version: '10',
 		}).setToken(process.env.token);
 
 		// Load slash commands
