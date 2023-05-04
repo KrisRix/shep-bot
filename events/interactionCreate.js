@@ -44,7 +44,15 @@ module.exports = {
 		}
 		else if (interaction.isButton()) {
 			const button = client.buttons.get(interaction.customId);
-			if (!button) return await interaction.reply({ content: 'Sorry, pal, there was no button code found for this button.' });
+			const buttonSpecial = ['confirm', 'cancel', 'adult', 'minor', 'ao3', 'tumblr', 'twitter', 'instagram', 'goodreads'];
+			if (!button) {
+				if (buttonSpecial.some(b => interaction.customId.includes(b))) {
+					return;
+				}
+				else {
+					await interaction.reply({ content: 'Sorry, pal, there was no button code found for this button.' });
+				}
+			}
 			try {
 				await button.execute(interaction, client);
 			}
