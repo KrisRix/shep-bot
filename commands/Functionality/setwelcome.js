@@ -1,6 +1,5 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const welcomeSchema = require('../../schemas/welcome-schema');
-const { Permissions } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -13,8 +12,8 @@ module.exports = {
 		.addStringOption(option => option
 			.setName('message')
 			.setDescription('The welcome message')
-			.setRequired(true)),
-	permissions: [ Permissions.FLAGS.MANAGE_GUILD ],
+			.setRequired(true))
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
 	async execute(interaction) {
 		const target = interaction.options.getChannel('target');
 		const text = interaction.options.getString('message');

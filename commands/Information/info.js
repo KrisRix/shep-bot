@@ -1,5 +1,4 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -29,7 +28,7 @@ module.exports = {
 				user = await interaction.options.getUser('target').fetch(true);
 				member = await interaction.options.getMember('target');
 			}
-			const userEmbed = new MessageEmbed()
+			const userEmbed = new EmbedBuilder()
 				.setTitle(`${user.username}'s Information`)
 				.setDescription(`Here's the low-down on <@${user.id}>`)
 				.setThumbnail(member.displayAvatarURL())

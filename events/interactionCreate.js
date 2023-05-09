@@ -1,7 +1,9 @@
+const { InteractionType } = require('discord.js');
+
 module.exports = {
 	name: 'interactionCreate',
 	async execute(interaction, client) {
-		if (interaction.isCommand()) {
+		if (interaction.type === InteractionType.ApplicationCommand) {
 			const command = client.commands.get(interaction.commandName);
 
 			if (!command) return;
@@ -20,7 +22,7 @@ module.exports = {
 				});
 			}
 		}
-		else if (interaction.isSelectMenu()) {
+		else if (interaction.isStringSelectMenu()) {
 			if (interaction.customId == 'color-select') {
 				if (`${interaction.values}` == 'purple') {
 					await interaction.reply({ content: 'Cool! Purple is Penny\'s favorite color, too!' });
@@ -44,7 +46,15 @@ module.exports = {
 		}
 		else if (interaction.isButton()) {
 			const button = client.buttons.get(interaction.customId);
-			if (!button) return await interaction.reply({ content: 'Sorry, pal, there was no button code found for this button.' });
+			const buttonSpecial = ['confirm', 'cancel', 'adult', 'minor', 'ao3', 'tumblr', 'twitter', 'instagram', 'goodreads'];
+			if (!button) {
+				if (buttonSpecial.some(b => interaction.customId.includes(b))) {
+					return;
+				}
+				else {
+					await interaction.reply({ content: 'Sorry, pal, there was no button code found for this button.' });
+				}
+			}
 			try {
 				await button.execute(interaction, client);
 			}

@@ -1,43 +1,34 @@
+const { ActivityType } = require('discord.js');
+
 module.exports = {
 	name: 'ready',
 	once: true,
 	async execute(client) {
 		const statusArray = [
 			{
-				type: 'PLAYING',
-				content: 'with some fairies',
-				status: 'dnd',
+				type: ActivityType.Playing,
+				name: 'with some fairies',
 			},
 			{
-				type: 'WATCHING',
-				content: 'Penny do research',
-				status: 'idle',
+				type: ActivityType.Watching,
+				name: 'Penny do research',
 			},
 			{
-				type: 'LISTENING',
-				content: 'convos about magic',
-				status: 'online',
+				type: ActivityType.Listening,
+				name: 'convos about magic',
 			},
 		];
-		async function pickPresence() {
+		async function pickActivity() {
 			const option = Math.floor(Math.random() * statusArray.length);
 
 			try {
-				await client.user.setPresence({
-					activities: [
-						{
-							name: statusArray[option].content,
-							type: statusArray[option].type,
-						},
-					],
-					status: statusArray[option].status,
-				});
+				await client.user.setActivity(statusArray[option]);
 			}
 			catch (error) {
 				console.error(error);
 			}
 		}
-		setInterval(pickPresence, 15 * 1000);
+		setInterval(pickActivity, 15 * 1000);
 		console.log(`Raring to go! Logged in as ${client.user.tag}`);
 	},
 };
