@@ -1,5 +1,4 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
+const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, EmbedBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const profileSchema = require('../../schemas/profile-schema');
 
 const pronounsList = ['941035999339872337'];
@@ -45,7 +44,7 @@ module.exports = {
 		// Embed with entered info
 		await interaction.user.fetch();
 		const member = await interaction.member.fetch();
-		const profileEmbed = new MessageEmbed()
+		const profileEmbed = new EmbedBuilder()
 			.setTitle(`${interaction.user.username}'s Profile`)
 			.setThumbnail(member.displayAvatarURL())
 			.addFields(
@@ -71,53 +70,69 @@ module.exports = {
 			.setFooter({ text: `${client.user.tag}`, iconURL: `${client.user.displayAvatarURL()}` });
 
 		// Message to confirm input
-		const row = new MessageActionRow()
+		const row = new ActionRowBuilder()
 			.addComponents(
-				new MessageButton()
-					.setCustomId('confirm')
+				new ButtonBuilder()
+					.setCustomId('confirmProfile')
 					.setLabel('Confirm')
-					.setStyle('SUCCESS'),
-				new MessageButton()
-					.setCustomId('cancel')
+					.setStyle(ButtonStyle.Primary),
+				new ButtonBuilder()
+					.setCustomId('cancelProfile')
 					.setLabel('Cancel')
-					.setStyle('DANGER'),
+					.setStyle(ButtonStyle.Danger),
 			);
-		await interaction.reply({
-			content: '_*Here\'s the info I\'ve got about you:*_',
-			ephemeral: true,
-			embeds: [profileEmbed],
-			components: [row] });
+    const response = await interaction.reply({
+      content: `_*Here\'s the info I\'ve got about you:*_`,
+      ephemeral: true,
+      embeds: [profileEmbed],
+      components: [row]
+    });
 
-		const filter = i => i.user.id === interaction.user.id;
+		const collectorFilter = i => {
+      return i.user.id === interaction.user.id;
+    };
 
-		const collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000 });
 
-		collector.on('collect', async i => {
-			if (i.customId === 'cancel') {
-				await i.update({ content: 'Profile setup cancelled.', components: [], embeds: [] });
-			}
-			else if (i.customId === 'confirm') {
-				await i.update({ content: 'Profile setup confirmed.', components: [], embeds: [] });
+    try {
+      const collector = await response.createMessageComponentCollector({ filter: collectorFilter, componentType: ComponentType.Button, time: 60000, max: 1 });
+      collector.on('collect', async i => {
+        if (i.customId === 'cancelProfile') {
+          response.edit({ content: 'Profile setup cancelled.', components: [], embeds: [] });
+          collector.stop('Collector stopped manually');
+        }
+        else if (i.customId === 'confirmProfile') {
+          response.edit({ content: 'Profile setup confirmed!', components: [], embeds: [] });
+          collector.stop('Collector stopped manually');
 				// Update database
-				await profileSchema.findOneAndUpdate({
-					_id: interaction.guild.id,
-					memberId: interaction.member.id,
-				},
-				{
-					_id: interaction.guild.id,
-					memberId: interaction.member.id,
-					pronouns: memberPronouns,
-					age,
-					ao3,
-					tumblr,
-					twitter,
-					instagram,
-					goodreads,
-				}, {
-					upsert: true,
-				});
-			}
-		});
-
+          await profileSchema.findOneAndUpdate({
+            _id: interaction.guild.id,
+					  memberId: interaction.member.id,
+				  },
+				  {
+					  _id: interaction.guild.id,
+					  memberId: interaction.member.id,
+					  pronouns: memberPronouns,
+					  age,
+					  ao3,
+					  tumblr,
+					  twitter,
+					  instagram,
+					  goodreads,
+				  }, {
+					  upsert: true,
+				  });
+			  }
+      });
+      collector.on('end', (collected, reason) => {
+        if (reason && reason === 'Collector stopped manually') {
+          console.log('Collector has been stopped manually');
+        } else {
+          console.log('Collector has NOT been stopped manually');
+          response.edit({ content: `I didn't receive your confirmation within 1 minute, so I cancelled it.`, components: [], embeds: [] });
+      }
+});
+    } catch (e) {
+      console.log(e);
+    }
 	},
 };

@@ -1,25 +1,24 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('hex')
 		.setDescription('Displays Discord hex colour codes.'),
 	async execute(interaction) {
-		const row = new MessageActionRow()
+		const row = new ActionRowBuilder()
 			.addComponents(
-				new MessageButton()
+				new ButtonBuilder()
 					.setCustomId('danger-button')
 					.setLabel('Danger')
-					.setStyle('DANGER'),
-				new MessageButton()
+					.setStyle(ButtonStyle.Danger),
+				new ButtonBuilder()
 					.setCustomId('success-button')
 					.setLabel('Success')
-					.setStyle('SUCCESS'),
-				new MessageButton()
+					.setStyle(ButtonStyle.Success),
+				new ButtonBuilder()
 					.setCustomId('primary-button')
 					.setLabel('Primary')
-					.setStyle('PRIMARY'),
+					.setStyle(ButtonStyle.Primary),
 			);
 		await interaction.reply({
 			content: 'Select button to get colours.',

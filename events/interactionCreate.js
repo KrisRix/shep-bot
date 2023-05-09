@@ -1,3 +1,5 @@
+const { InteractionType } = require('discord.js');
+
 module.exports = {
 	name: 'interactionCreate',
 	async execute(interaction, client) {
@@ -20,7 +22,7 @@ module.exports = {
 				});
 			}
 		}
-		else if (interaction.isSelectMenu()) {
+		else if (interaction.isStringSelectMenu()) {
 			if (interaction.customId == 'color-select') {
 				if (`${interaction.values}` == 'purple') {
 					await interaction.reply({ content: 'Cool! Purple is Penny\'s favorite color, too!' });

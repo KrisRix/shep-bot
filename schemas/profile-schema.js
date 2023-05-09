@@ -10,7 +10,7 @@ const profileSchema = new Schema({
 	_id: reqString,
 	memberId: reqString,
 	pronouns: reqString,
-	age: Boolean,
+	age: String,
 	ao3: String,
 	tumblr: String,
 	twitter: String,
