@@ -81,58 +81,60 @@ module.exports = {
 					.setLabel('Cancel')
 					.setStyle(ButtonStyle.Danger),
 			);
-    const response = await interaction.reply({
-      content: `_*Here\'s the info I\'ve got about you:*_`,
-      ephemeral: true,
-      embeds: [profileEmbed],
-      components: [row]
-    });
+		const response = await interaction.reply({
+			content: '_*Here\'s the info I\'ve got about you:*_',
+			ephemeral: true,
+			embeds: [profileEmbed],
+			components: [row],
+		});
 
 		const collectorFilter = i => {
-      return i.user.id === interaction.user.id;
-    };
+			return i.user.id === interaction.user.id;
+		};
 
 
-    try {
-      const collector = await response.createMessageComponentCollector({ filter: collectorFilter, componentType: ComponentType.Button, time: 60000, max: 1 });
-      collector.on('collect', async i => {
-        if (i.customId === 'cancelProfile') {
-          response.edit({ content: 'Profile setup cancelled.', components: [], embeds: [] });
-          collector.stop('Collector stopped manually');
-        }
-        else if (i.customId === 'confirmProfile') {
-          response.edit({ content: 'Profile setup confirmed!', components: [], embeds: [] });
-          collector.stop('Collector stopped manually');
-				// Update database
-          await profileSchema.findOneAndUpdate({
-            _id: interaction.guild.id,
-					  memberId: interaction.member.id,
-				  },
-				  {
-					  _id: interaction.guild.id,
-					  memberId: interaction.member.id,
-					  pronouns: memberPronouns,
-					  age,
-					  ao3,
-					  tumblr,
-					  twitter,
-					  instagram,
-					  goodreads,
-				  }, {
-					  upsert: true,
-				  });
-			  }
-      });
-      collector.on('end', (collected, reason) => {
-        if (reason && reason === 'Collector stopped manually') {
-          console.log('Collector has been stopped manually');
-        } else {
-          console.log('Collector has NOT been stopped manually');
-          response.edit({ content: `I didn't receive your confirmation within 1 minute, so I cancelled it.`, components: [], embeds: [] });
-      }
-});
-    } catch (e) {
-      console.log(e);
-    }
+		try {
+			const collector = await response.createMessageComponentCollector({ filter: collectorFilter, componentType: ComponentType.Button, time: 60000, max: 1 });
+			collector.on('collect', async i => {
+				if (i.customId === 'cancelProfile') {
+					response.edit({ content: 'Profile setup cancelled.', components: [], embeds: [] });
+					collector.stop('Collector stopped manually');
+				}
+				else if (i.customId === 'confirmProfile') {
+					response.edit({ content: 'Profile setup confirmed!', components: [], embeds: [] });
+					collector.stop('Collector stopped manually');
+					// Update database
+					await profileSchema.findOneAndUpdate({
+						_id: interaction.guild.id,
+						memberId: interaction.member.id,
+					},
+					{
+						_id: interaction.guild.id,
+						memberId: interaction.member.id,
+						pronouns: memberPronouns,
+						age,
+						ao3,
+						tumblr,
+						twitter,
+						instagram,
+						goodreads,
+					}, {
+						upsert: true,
+					});
+				}
+			});
+			collector.on('end', (collected, reason) => {
+				if (reason && reason === 'Collector stopped manually') {
+					console.log('Collector has been stopped manually');
+				}
+				else {
+					console.log('Collector has NOT been stopped manually');
+					response.edit({ content: 'I didn\'t receive your confirmation within 1 minute, so I cancelled it.', components: [], embeds: [] });
+				}
+			});
+		}
+		catch (e) {
+			console.log(e);
+		}
 	},
 };
