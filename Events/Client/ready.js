@@ -1,4 +1,5 @@
 const { ActivityType } = require('discord.js');
+const { loadCommands } = require('../../Handlers/handleCommands');
 
 module.exports = {
 	name: 'ready',
@@ -29,6 +30,9 @@ module.exports = {
 			}
 		}
 		setInterval(pickActivity, 15 * 1000);
-		console.log(`Raring to go! Logged in as ${client.user.tag}`);
+
+		loadCommands(client);
+		console.log(`Raring to go! Logged in as ${client.user.username}`);
+
 	},
 };

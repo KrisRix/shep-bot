@@ -13,7 +13,7 @@ module.exports = {
 			.setName('message')
 			.setDescription('The welcome message')
 			.setRequired(true))
-    .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
+		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
 	async execute(interaction) {
 		const target = interaction.options.getChannel('target');
 		const text = interaction.options.getString('message');
