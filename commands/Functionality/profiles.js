@@ -92,7 +92,6 @@ module.exports = {
 			return i.user.id === interaction.user.id;
 		};
 
-
 		try {
 			const collector = await response.createMessageComponentCollector({ filter: collectorFilter, componentType: ComponentType.Button, time: 60000, max: 1 });
 			collector.on('collect', async i => {
@@ -133,8 +132,8 @@ module.exports = {
 				}
 			});
 		}
-		catch (e) {
-			console.log(e);
+		catch (error) {
+			console.log(error);
 		}
 	},
 };

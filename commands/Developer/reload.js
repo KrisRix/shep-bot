@@ -2,7 +2,6 @@ const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const { loadEvents } = require('../../Handlers/handleEvents');
 const { loadCommands } = require('../../Handlers/handleCommands');
 
-
 module.exports = {
 	developer: true,
 	data: new SlashCommandBuilder()
@@ -17,7 +16,7 @@ module.exports = {
 			.setDescription('Reload commands')),
 
 	async execute(interaction, client) {
-		await interaction.deferReply({ ephemeral: true }).then(() => console.log('Deferred reload...')).catch((error) => console.log(error));
+		await interaction.deferReply({ ephemeral: true }).catch((error) => console.log(error));
 
 		const subCommand = interaction.options.getSubcommand();
 

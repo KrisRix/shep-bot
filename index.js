@@ -13,17 +13,21 @@ const client = new Client({
 	partials: [User, Message, GuildMember, ThreadMember],
 });
 
-
 // All Collections
 client.events = new Collection();
 client.commands = new Collection();
-// client.subCommands = new Collection();
-// client.guildConfig = new Collection();
-// client.buttons = new Collection();
+client.subCommands = new Collection();
+client.guildConfig = new Collection();
+client.buttons = new Collection();
 
+// Get things running
 const { loadEvents } = require('./Handlers/handleEvents.js');
-loadEvents(client);
+const { loadCommands } = require('./Handlers/handleCommands.js');
+const { dbLogin } = require('./Functions/dbLogin.js');
 
-client
-	.login(process.env.token)
+client.login(process.env.token).then(() => {
+	loadEvents(client);
+	loadCommands(client);
+	dbLogin();
+})
 	.catch((err) => console.log(err));

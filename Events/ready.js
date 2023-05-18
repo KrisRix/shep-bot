@@ -1,10 +1,9 @@
-const { ActivityType } = require('discord.js');
-const { loadCommands } = require('../../Handlers/handleCommands');
+const { Events, ActivityType } = require('discord.js');
 
 module.exports = {
-	name: 'ready',
+	name: Events.ClientReady,
 	once: true,
-	async execute(client) {
+	execute(client) {
 		const statusArray = [
 			{
 				type: ActivityType.Playing,
@@ -26,12 +25,12 @@ module.exports = {
 				await client.user.setActivity(statusArray[option]);
 			}
 			catch (error) {
+				console.error('Error setting Shep\'s activity/presence.');
 				console.error(error);
 			}
 		}
 		setInterval(pickActivity, 15 * 1000);
 
-		loadCommands(client);
 		console.log(`Raring to go! Logged in as ${client.user.username}`);
 
 	},
