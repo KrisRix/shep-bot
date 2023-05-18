@@ -8,14 +8,14 @@ const pronounsList = ['941035999339872337'];
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('profilenew')
+		.setName('profilebwoo')
 		.setDescription('Sets a member\'s profile.'),
 
 	async execute(interaction, client) {
 		// First message: setting socials
 		const socialModal = new ModalBuilder()
 			.setCustomId('socials')
-			.setTitle(`${interaction.user}'s Socials`);
+			.setTitle(`${interaction.user.username}'s Socials`);
 		const ao3Input = new TextInputBuilder()
 			.setCustomId('ao3')
 			.setLabel('Link to your AO3 account')
@@ -46,15 +46,23 @@ module.exports = {
 
 		await interaction.showModal(socialModal);
 
-		const ao3 = interaction.fields.getTextInputValue('ao3') ? interaction.fields.getTextInputValue('ao3').trim() : 'N/A';
-		const tumblr = interaction.fields.getTextInputValue('tumblr') ? interaction.fields.getTextInputValue('tumblr').trim() : 'N/A';
-		const twitter = interaction.fields.getTextInputValue('twitter') ? interaction.fields.getTextInputValue('twitter').trim() : 'N/A';
-		const instagram = interaction.fields.getTextInputValue('instagram') ? interaction.fields.getTextInputValue('instagram').trim() : 'N/A';
-		const goodreads = interaction.fields.getTextInputValue('goodreads') ? interaction.fields.getTextInputValue('goodreads').trim() : 'N/A';
+		const filterModal = i => i.user.id === interaction.user.id;
 
-		await interaction.followUp({
-			content: `You entered: /n${ao3}, /n${tumblr}, /n${twitter}, /n${instagram}, /n${goodreads},`,
-			ephemeral: true,
+		const collectorModal = interaction.channel.createMessageComponentcollectorButton({ filterModal, time: 15000 });
+
+		collectorModal.on('collect', async i => {
+			if (i.customId === 'socials') {
+				const ao3 = interaction.fields.getTextInputValue('ao3') ? interaction.fields.getTextInputValue('ao3').trim() : 'N/A';
+				const tumblr = interaction.fields.getTextInputValue('tumblr') ? interaction.fields.getTextInputValue('tumblr').trim() : 'N/A';
+				const twitter = interaction.fields.getTextInputValue('twitter') ? interaction.fields.getTextInputValue('twitter').trim() : 'N/A';
+				const instagram = interaction.fields.getTextInputValue('instagram') ? interaction.fields.getTextInputValue('instagram').trim() : 'N/A';
+				const goodreads = interaction.fields.getTextInputValue('goodreads') ? interaction.fields.getTextInputValue('goodreads').trim() : 'N/A';
+
+				await interaction.reply({
+					content: `You entered: /n${ao3}, /n${tumblr}, /n${twitter}, /n${instagram}, /n${goodreads},`,
+					ephemeral: true,
+				});
+			}
 		});
 
 		// Second message: setting age
@@ -75,11 +83,11 @@ module.exports = {
 			ephemeral: true,
 			components: [ageRow] });
 
-		const filter = i => i.user.id === interaction.user.id;
+		const filterButton = i => i.user.id === interaction.user.id;
 
-		const collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000 });
+		const collectorButton = interaction.channel.createMessageComponentcollectorButton({ filterButton, time: 15000 });
 
-		collector.on('collect', async i => {
+		collectorButton.on('collect', async i => {
 			if (i.customId === 'adult') {
 				await i.update({ content: 'Age set to: adult (18+)', components: [] });
 				age = 'adult';

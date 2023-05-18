@@ -6,7 +6,7 @@ module.exports = {
 	async execute(interaction, client) {
 
 		// If interaction is a command...
-		if (interaction.isChatInputCommand()) {
+		if (interaction.isChatInputCommand() && !interaction.isModalSubmit()) {
 			const command = client.commands.get(interaction.commandName);
 
 			// If command is outdated...
@@ -65,6 +65,32 @@ module.exports = {
 				});
 				console.error(`Error executing button: ${interaction.customId}`);
 				console.error(error);
+			}
+		}
+
+		// If interaction is a modal...
+		else if (interaction.isModalSubmit()) {
+			const modal = client.modals.get(interaction.customId);
+
+			// If model is outdated...
+			if (!modal) {
+				await interaction.reply({ content: 'Sorry, pal, there was no modal form found for this interaction.' });
+				console.error(`No modal form matching ${interaction.customId} was found`);
+				return;
+			}
+
+			try {
+				await modal.execute(interaction, client);
+			}
+			catch (error) {
+				console.error(`Error executing modal: ${interaction.customId}`);
+				console.error(error);
+				if (interaction.replied || interaction.deferred) {
+					await interaction.followUp({ content: 'Ope! There was an error while receiving your submission.', ephemeral: true });
+				}
+				else {
+					await interaction.reply({ content: 'Ope! There was an error while receiving your submission.', ephemeral: true });
+				}
 			}
 		}
 
